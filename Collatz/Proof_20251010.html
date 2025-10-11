@@ -8131,6 +8131,20 @@ $$
 </div>
 </div>
 </div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f7837698-8958-4670-ace3-6e7d1d03dc69">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dc60a0ff-c91e-4eca-a035-83839eece5bf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
@@ -8138,18 +8152,7 @@ $$
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Example:-Construct-43">Example: Construct 43<a class="anchor-link" href="#Example:-Construct-43">¶</a></h1>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7f4b99b6-229b-4554-bcb2-2fa3fcd9b021">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="%F0%9F%94%B9-Why-we-care-about-explicit-$T$">🔹 Why we care about explicit $T$<a class="anchor-link" href="#%F0%9F%94%B9-Why-we-care-about-explicit-$T$">¶</a></h3><p>The $T$ (the “shift amount”) tells us <em>how far</em> to move the block of zeros to implement the step $k \mapsto 4k+d$ in the generator’s language.</p>
+<h1 id="Example:-Construct-53">Example: Construct 53<a class="anchor-link" href="#Example:-Construct-53">¶</a></h1><h3 id="%F0%9F%94%B9-Why-we-care-about-explicit-$T$">🔹 Why we care about explicit $T$<a class="anchor-link" href="#%F0%9F%94%B9-Why-we-care-about-explicit-$T$">¶</a></h3><p>The $T$ (the “shift amount”) tells us <em>how far</em> to move the block of zeros to implement the step $k \mapsto 4k+d$ in the generator’s language.</p>
 <ul>
 <li>Conceptually, $T$ just guarantees <em>existence</em>: there <em>is</em> some shift large enough to make the arithmetic work.</li>
 <li>In examples (like building 89 from 22), we might want to pick a <em>small</em> $T$ so we can actually display the resulting bitstring — but the lemma only needs to show that <em>some</em> finite $T$ always works.</li>
@@ -8165,41 +8168,79 @@ To build $4k+d$ (with $d\in{0,1,2,3})$ you:</p>
 <li>then perform a uniform downshift by $T$ (equivalently divide by $2^{T})$ to remove the factor $2^{T}$.
 That insertion/downshift trick is the explicit tool the lemma gives: in formula form you insert new indices at positions $T+s_r$ (small integers $s_r$) and set $\tilde z_j = z_j+2+T$; after sorting and then uniformly shifting all indices down by $T$ you obtain a new list of integer zero indices and a new $a$ giving a witness for $4k+d$.</li>
 </ul>
-<h2 id="2)-Construct-43">2) Construct 43<a class="anchor-link" href="#2)-Construct-43">¶</a></h2><ol>
-<li>$2\to 10\to 43$</li>
-</ol>
-<p>Write 43 in base 4: $43 = 2\cdot4^2 + 2\cdot4 + 3$. So starting at the most-significant digit $2$ we do:</p>
+<h2 id="2)-Construct-53-starting-with-3">2) Construct 53 starting with 3<a class="anchor-link" href="#2)-Construct-53-starting-with-3">¶</a></h2><h3 id="Step-0-%E2%80%94-seed:-(3)">Step 0 — seed: (3)<a class="anchor-link" href="#Step-0-%E2%80%94-seed:-(3)">¶</a></h3><p>A convenient witness for (3) is</p>
 <ul>
-<li>$k_0=2$</li>
-<li>$k_1 = 4\cdot k_0 + 2 = 10$</li>
-<li>$k_2 = 4\cdot k_1 + 3 = 43$.</li>
+<li>bit-string (length $a=5$): <code>00111</code></li>
+<li>zero indices (left-to-right, 0-based): $[0,1]$, so $b=2$.</li>
+<li>compute
+$$
+c=3^{1}2^{0}+3^{0}2^{1}=3+2=5,
+$$
+and
+$$
+\frac{2^{5}-c}{3^{2}}=\frac{32-5}{9}=\frac{27}{9}=3.
+$$</li>
 </ul>
-<ol start="3">
-<li>Explicit witnesses (compact ones found by search)</li>
-</ol>
+<p>So <code>00111</code> is a valid generator witness for $3$.</p>
+<hr/>
+<h2 id="Step-1-%E2%80%94-one-lemma-step:-$3-%5Cmapsto-13$-(since-$13=4%5Ccdot-3+1$)">Step 1 — one lemma step: $3 \mapsto 13$ (since $13=4\cdot 3+1$)<a class="anchor-link" href="#Step-1-%E2%80%94-one-lemma-step:-$3-%5Cmapsto-13$-(since-$13=4%5Ccdot-3+1$)">¶</a></h2><p>Starting from the $3$-witness above, one lemma-step produces a witness for $13$. An explicit, compact witness for $13$ is:</p>
 <ul>
-<li><p><strong>k = 2</strong></p>
+<li>bit-string (length $a=7$): <code>0110111</code></li>
+<li>zero indices: $[0,3]$, so $b=2$.</li>
+<li>compute
+$$
+c = 3\cdot2^{0} + 1\cdot2^{3} = 3 + 8 = 11,
+$$
+and
+$$
+\frac{2^{7}-c}{3^{2}}=\frac{128-11}{9}=\frac{117}{9}=13.
+$$</li>
+</ul>
+<p>This realizes the lemma step $3\mapsto 13$ (indeed $13=4\cdot 3+1$), and the witness <code>0110111</code> verifies the identity.</p>
+<hr/>
+<h2 id="Step-2-%E2%80%94-one-lemma-step:-$13-%5Cmapsto-53$-(since-$53=4%5Ccdot-13+1$)">Step 2 — one lemma step: $13 \mapsto 53$ (since $53=4\cdot 13+1$)<a class="anchor-link" href="#Step-2-%E2%80%94-one-lemma-step:-$13-%5Cmapsto-53$-(since-$53=4%5Ccdot-13+1$)">¶</a></h2><p>Algebraic check first. Start from the (13)-identity
+$$
+2^{7}=13\cdot 3^{2} + 11.
+$$
+Multiply by $4$:
+$$
+2^{9}=52\cdot 3^{2} + 44.
+$$
+We want a representation for $53=4\cdot 13 + 1$. Writing
+$$
+2^{9} = 53\cdot 3^{2} + c'
+$$
+we solve for $c'$:
+$$
+c' = 2^{9} - 53\cdot 3^{2} = 512 - 477 = 35.
+$$
+So we need a $c'$ equal to $35$ expressed in the generator-sum form with $b=2$:
+$$
+c' = 3^{1}2^{u} + 3^{0}2^{v} = 3\cdot 2^{u} + 2^{v}.
+$$
+One convenient choice is $u=0,\ v=5$ because $3\cdot 2^{0}+2^{5}=3+32=35$.</p>
+<p>Thus an explicit witness for (53) is:</p>
 <ul>
-<li>bit-string (length $a=1$): <code>1</code> (no zeros)</li>
-<li>This corresponds to $ (2^1 - 0)/3^0 = 2/1 = 2$.</li>
-<li>(Remark: a tiny witness; equivalently you can use <code>101</code> as a more canonical "zero present" witness but <code>1</code> is simplest.)</li>
+<li>bit-string (length $a=9$): <code>011110111</code>
+(indices $0$ through $8$; zeros at positions $0$ and $5$)</li>
+<li>zero indices: ([0,5]), so (b=2).</li>
+<li>compute
+$$
+c' = 3\cdot 2^{0} + 2^{5} = 3 + 32 = 35,
+$$
+and
+$$
+\frac{2^{9} - c'}{3^{2}} = \frac{512 - 35}{9} = \frac{477}{9} = 53.
+$$</li>
 </ul>
-</li>
-<li><p><strong>k = 10</strong></p>
-<ul>
-<li>bit-string (length $a=5$): <code>10111</code></li>
-<li>zero indices: $[1]$, so $b=1$.</li>
-<li>$c = 3^{0}2^{1}=2). Then ((2^{5}-2)/3 = (32-2)/3 = 30/3 = 10$.</li>
+<p>So <code>011110111</code> is a valid witness for $53$.</p>
+<hr/>
+<h2 id="Summary-(the-path)">Summary (the path)<a class="anchor-link" href="#Summary-(the-path)">¶</a></h2><ul>
+<li>$3$ via <code>00111</code> (a=5, zeros $[0,1]$).</li>
+<li>$13 = 4\cdot 3 + 1$ via <code>0110111</code> (a=7, zeros $[0,3]$).</li>
+<li>$53 = 4\cdot 13 + 1$ via <code>011110111</code> (a=9, zeros $[0,5]$).</li>
 </ul>
-</li>
-<li><p><strong>k = 43</strong></p>
-<ul>
-<li>bit-string (length $a=20$): <code>00101011100010110111</code></li>
-<li>zero indices: $[0,1,3,5,9,10,11,13,16]$, so $b=9$.</li>
-<li>$c=202{,}207$. Then $(2^{20}-202{,}207)/3^{9} = 43$.</li>
-</ul>
-</li>
-</ul>
+<p>Each arrow is a single application of the lemma’s step $k\mapsto 4k+d$ with $d=1$. The algebra checks are shown above: each bit-string satisfies the generator identity.</p>
 </div>
 </div>
 </div>
@@ -8250,10 +8291,10 @@ That insertion/downshift trick is the explicit tool the lemma gives: in formula 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">ChainPath</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">ChainPath</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8264,9 +8305,9 @@ That insertion/downshift trick is the explicit tool the lemma gives: in formula 
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>'1'</pre>
+<pre>'00111'</pre>
 </div>
 </div>
 </div>
@@ -8276,10 +8317,10 @@ That insertion/downshift trick is the explicit tool the lemma gives: in formula 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">ChainPath</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">ChainPath</span><span class="p">(</span><span class="mi">53</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8290,9 +8331,9 @@ That insertion/downshift trick is the explicit tool the lemma gives: in formula 
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>'00101011100010110111'</pre>
+<pre>'011110111'</pre>
 </div>
 </div>
 </div>
