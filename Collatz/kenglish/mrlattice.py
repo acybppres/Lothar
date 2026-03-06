@@ -543,44 +543,49 @@ def computePrefixForModClass(power_of_2, n):
     return label
 #
 
-def affineFunctionParamsFromPrefix(prefix):
-    """
-    Return the affine parameters A, B for n' = A*n + B
+"""
+This isn't quite right, flips sign on some B values
 
-    (Logic extracted from earlier mapByPrefix function)
-    """
-    a = len(prefix)
-    b = countZeros(prefix)
-    accum = 0
-    sgn = -1**(a)
-    for i in range(a-1):
-        sgn = sgn * -1
-        P = [2]*(a) # we do not do the zz term
-        if prefix[i] == "0":
-            P[i] = 1
-        else:
-            continue  # y = 0, so product will be 0
-        for j in range(i+1, a, 1):
-            if prefix[j] == "0":
-                P[j] = -3
-            else:
-                P[j] = -1
-        #print((sgn, P))
-        accum += (sgn * np.prod(P))
+generationAffineParamsFromPath always works
 
-    if prefix[-1] == "0":
-        #print((-sgn, [2]*(a-1)))
-        accum -= (sgn * (2**(a-1)))
-    #print(b, accum)
-    return(3**b, int(accum)) # get rid of np.int before returning
-#
+"""
+# def affineFunctionParamsFromPrefix(prefix):
+#     """
+#     Return the affine parameters A, B for n' = A*n + B
+#     (Logic extracted from earlier mapByPrefix function)
+#     """
+#     a = len(prefix)
+#     b = countZeros(prefix)
+#     accum = 0
+#     sgn = -1**(a)
+#     for i in range(a-1):
+#         sgn = sgn * -1
+#         P = [2]*(a) # we do not do the zz term
+#         if prefix[i] == "0":
+#             P[i] = 1
+#         else:
+#             continue  # y = 0, so product will be 0
+#         for j in range(i+1, a, 1):
+#             if prefix[j] == "0":
+#                 P[j] = -3
+#             else:
+#                 P[j] = -1
+#         #print((sgn, P))
+#         accum += (sgn * np.prod(P))
+
+#     if prefix[-1] == "0":
+#         #print((-sgn, [2]*(a-1)))
+#         accum -= (sgn * (2**(a-1)))
+#     #print(b, accum)
+#     return(3**b, int(accum)) # get rid of np.int before returning
+# #
 def affineFunctionFromModulus(power_of_2, mod):
     """
     Generates the correct An+B function for the given modulus and base.
     """
     mod_base = 2**power_of_2
     prefix = computePrefixForModClass(power_of_2, mod+mod_base) # Avoid zero, one conditions with added mod_base
-    A, B = affineFunctionParamsFromPrefix(prefix)
+    A, B = generationAffineParamsFromPath(prefix)
     # print(f"{mod}(mod {mod_base}): A={A}, B={B}")
     def an_affine_func(n):
         return A*n + B 
@@ -600,7 +605,7 @@ def maxConverge(n):
     while n != 1:
         p2 = maxOddPowerOf2(n)
         prefix = computePrefixForModClass(p2, n)
-        A, B = affineFunctionParamsFromPrefix(prefix)
+        A, B = generationAffineParamsFromPath(prefix)
         n = A*n + B
         j = 0
         while n & 1 == 0:
@@ -702,41 +707,6 @@ def maxOddPowerOf2(n):
         p2 = 3
     return p2
 #
-def affineFunctionParamsFromPrefix(prefix):
-    """
-    Return the affine parameters A, B for n' = A*n + B
-
-    (Logic extracted from earlier mapByPrefix function)
-    """
-    a = len(prefix)
-    b = countZeros(prefix)
-    accum = 0
-    sgn = -1**(a)
-    for i in range(a-1):
-        sgn = sgn * -1
-        P = [2]*(a) # we do not do the zz term
-        if prefix[i] == "0":
-            P[i] = 1
-        else:
-            continue  # y = 0, so product will be 0
-        for j in range(i+1, a, 1):
-            if prefix[j] == "0":
-                P[j] = -3
-            else:
-                P[j] = -1
-        #print((sgn, P))
-        # Trying to avoid an overflow condition ...
-        if sgn == 1:
-            accum = accum + np.prod(P)
-        else:
-            accum = accum - np.prod(P)
-
-    if prefix[-1] == "0":
-        #print((-sgn, [2]*(a-1)))
-        accum -= (sgn * (2**(a-1)))
-    #print(b, accum)
-    return(3**b, int(accum)) # get rid of np.int before returning
-#
 def acceleratedConvergeOdd(n):
     p2 = maxOddPowerOf2(n)  # Get the largest odd power of 2 less than n
     """
@@ -744,7 +714,7 @@ def acceleratedConvergeOdd(n):
     move the odd parameter to the 0(mod 2^{p2}) portion of the lattice
     """
     prefix = computePrefixForModClass(p2, n)
-    A, B = affineFunctionParamsFromPrefix(prefix)
+    A, B = generationAffineParamsFromPath(prefix)
     n_ = A*n + B
     return n_
 #
@@ -855,38 +825,6 @@ def bottom_val(a):
         val <<=2
         val |= 1
     return val
-#
-
-def affineFunctionParamsFromPrefix(prefix):
-    """
-    Return the affine parameters A, B for n' = A*n + B
-
-    (Logic extracted from earlier mapByPrefix function)
-    """
-    a = len(prefix)
-    b = countZeros(prefix)
-    accum = 0
-    sgn = -1**(a)
-    for i in range(a-1):
-        sgn = sgn * -1
-        P = [2]*(a) 
-        if prefix[i] == "0":
-            P[i] = 1
-        else:
-            continue  # y = 0, so product will be 0
-        for j in range(i+1, a, 1):
-            if prefix[j] == "0":
-                P[j] = -3
-            else:
-                P[j] = -1
-        #print((sgn, P))
-        accum += (sgn * np.prod(P))
-
-    if prefix[-1] == "0":
-        #print((-sgn, [2]*(a-1)))
-        accum -= (sgn * (2**(a-1)))
-    #print(b, accum)
-    return(3**b, int(accum)) # get rid of np.int before returning
 #
 
 def efficient_binary_arrangements(num_zeros, num_ones):
@@ -1234,6 +1172,9 @@ def generationAffineParamsFromPath(label):
     e.g.  5 -> "0111" -> A=3,B=1 -> 3*5 + 1 -> 2**4
     """
     a, b = len(label), countZeros(label)
+    if b == 0:
+        return 0, 2**a
+    # <=======
     A = 3**(b)
     d = b - 1
     B = 0
