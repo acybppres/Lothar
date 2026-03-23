@@ -151,18 +151,21 @@ def mr_TupItemValue(a_b, a_0):
     a,b = a_b
     return (2**a)*(3**(a_0 + b))
 #
-def mrTupValue(mr_tup):
-    """ Compute the value of the given mrTup
+def mrTupRootedValue(root_val, mr_tup):
+    """ Compute the value of the given mrTup in a lattice with root root_val
 
         Returns value as a cannonical (numerator, denominator) pair
     """
     # Multiplying the numerator by 3 ** the generation keeps us in integer land
     a_0 = mr_tup[0][0]
-    total = mr_TupItemValue(mr_tup[0], a_0)
+    total = root_val * mr_TupItemValue(mr_tup[0], a_0)
     for a_b in mr_tup[1]:
         total -= mr_TupItemValue(a_b, a_0)
     frac = Fraction(total, 3**a_0)
     return (frac.numerator, frac.denominator)
+#
+def mrTupValue(mr_tup):
+    return mrTupRootedValue(1, mr_tup)
 #
 # Terse version for math conversion
 def F_0(mr_tup):
@@ -227,6 +230,16 @@ def mrTupFromPath(label):
         else:
             mr_tup = F_0(mr_tup)
     return mr_tup
+#
+def mrTupToPath(T):
+    """
+    Convert mrTup to node label
+    The T[1] list encodes the positions of the zeros in the numerator power of two values
+    """
+    S = ["1"] * T[0][0]
+    for j in range(len(T[1])):
+        S[(T[1][j][0])] = "0" 
+    return "".join(S)
 #
 def mrTupFromValue(n):
     label = collatzPath(n)
@@ -1225,4 +1238,45 @@ def write_generationIntegersForwardWithMeta(filename, a):
             line = "\t".join(map(str, [n for n in tup])) + "\n"
             g.write(line)
     #
+#
+def generationRootedIntegersForwardWithMeta_(root, a, previous):
+    """
+    Supporting function for next method, generates next generation from the previous
+    """
+    for n_a_b_l in previous:
+        # Ignore the $a$ in the tuple
+        n, _, b, label = n_a_b_l
+        label_ = "1" + label
+        # a = len(label)
+        yield (2 * n, a, b, label_)
+        numer = 2*n - 1
+        if numer % 3 == 0:
+            n_ = numer // 3
+            label_ = "0" + label
+            yield (n_, a, b+1, label_)
+#
+def generationRootedIntegersForwardWithMeta(root, a):
+    """
+    Quickly generate all integers in the Collatz tree out to the given generation
+    """
+    # The starting point
+    previous = [(root, 0, 0, "")]
+    yield previous[0]
+    
+    for a_ in range(1, a+1):
+        accum = []
+        for tup_yielded in generationRootedIntegersForwardWithMeta_(root, a_, previous):
+            accum.append(tup_yielded)
+            yield tup_yielded
+        previous = accum
+#
+def collatzChain(collatzNumber):
+    chain = [collatzNumber]
+    while not (collatzNumber in [1, -1, -5, -17]):
+        if (collatzNumber & 1) == 0:
+            collatzNumber = collatzNumber // 2
+        else:
+            collatzNumber = (3 * collatzNumber + 1) // 2
+        chain.append(collatzNumber)
+    return np.array(chain)
 #
